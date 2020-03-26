@@ -14,6 +14,7 @@ function app(people){
     case 'no':
       // TODO: search by traits
       break;
+      // use "alert and pass in string"
       default:
     app(people); // restart app
       break;
@@ -37,7 +38,7 @@ function mainMenu(person, people){
 
   switch(displayOption){
     case "info":
-    // TODO: get person's info
+    displayPerson(person)
     break;
     case "family":
     // TODO: get person's family
@@ -66,8 +67,8 @@ function searchByName(people){
     else{
       return false;
     }
-  })
-  // TODO: find the person using the name they entered
+  })[0]
+  // TODO: find the person using the name they entered--COMPLETE
   return foundPerson;
 }
 
@@ -81,11 +82,17 @@ function displayPeople(people){
 function displayPerson(person){
   // print all of the information about a person:
   // height, weight, age, name, occupation, eye color.
-  let personInfo = "First Name: " + person.firstName + "\n";
-  personInfo += "Last Name: " + person.lastName + "\n";
-  // TODO: finish getting the rest of the information to display
+  let personInfo = `First Name: ${person.firstName}\\n`;
+  personInfo += `Last Name: ${person.lastName}\n`;
+  personInfo += `Gender: ${person.gender}\n`;
+  personInfo += `Date of Birth: ${person.dob}\n`;
+  personInfo += `Height: ${person.height}\n`;
+  personInfo += `Weight: ${person.weight}\n`;
+  personInfo += `Eye Color: ${person.eyeColor}\n`;
+  // TODO: finish getting the rest of the information to display -COMPLETE
   alert(personInfo);
 }
+
 
 // function that prompts and validates user input
 function promptFor(question, valid){
