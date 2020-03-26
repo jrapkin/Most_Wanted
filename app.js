@@ -42,6 +42,7 @@ function mainMenu(person, people){
     break;
     case "family":
     // TODO: get person's family
+    findParents(person, people)
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -113,6 +114,26 @@ function findSpouse(person, people)
     }
   })
   return el[0];
+}
+function findParents(person, people)
+{
+  let parents = []
+  for (let i = 0; i < person.parents.length; i++)
+  {
+    people.filter(function (el)
+    {
+      if(el.id == person.parents[i] && el.id != person.id)
+      {
+        parents.push(el);
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    })
+  }
+  return parents;
 }
 
 // function that prompts and validates user input
