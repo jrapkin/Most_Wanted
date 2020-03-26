@@ -41,8 +41,8 @@ function mainMenu(person, people){
     displayPerson(person)
     break;
     case "family":
-    // TODO: get person's family
-    findParents(person, people)
+      
+    displayFamily(findSpouse(person, people), findParents(person,people), findChildren(person, people));
     break;
     case "descendants":
     // TODO: get person's descendants
@@ -94,10 +94,30 @@ function displayPerson(person){
   // TODO: finish getting the rest of the information to display -COMPLETE
   alert(personInfo);
 }
-// TODO: Display spouse, both parents, children, and siblings
-function displayFamily(spouse)
+
+// TODO: Display  children  - COMPLETE
+function displayFamily(spouse, parents, children)
 {
-  
+  let familyInfo = "";
+  if(spouse != undefined){
+    familyInfo = `Name: ${spouse.firstName} ${spouse.lastName}\n`;
+    familyInfo += "Relationship: Spouse\n\n";
+  }
+ 
+  if(parents.length != null) {
+    parents.forEach(element => {
+      familyInfo += `Name: ${element.firstName} ${element.lastName}\n`
+      familyInfo += `Relationship: Parent\n\n`
+    });
+  }
+
+  if(children.length != null) {
+    children.forEach(el => {
+      familyInfo += `Name: ${el.firstName} ${el.lastName}\n`
+      familyInfo += `Relationship: Child\n\n`
+    })
+  }
+alert(familyInfo);
 }
 
 function findSpouse(person, people)
@@ -113,7 +133,7 @@ function findSpouse(person, people)
       return false;
     }
   })
-  return el[0];
+  return spouse[0];
 }
 function findParents(person, people)
 {
@@ -134,6 +154,19 @@ function findParents(person, people)
     })
   }
   return parents;
+}
+
+function findChildren(person, people) {
+  let children = [];
+
+  people.forEach(el => {
+    for(var i=0; i<el.parents.length; i++){
+      if(person.id === el.parents[i]) {
+        children.push(el);
+      }
+    }
+  })
+  return(children);
 }
 
 // function that prompts and validates user input
