@@ -67,9 +67,10 @@ function searchByName(people){
     else{
       return false;
     }
-  })[0]
+  })
+ 
   // TODO: find the person using the name they entered--COMPLETE
-  return foundPerson;
+  return foundPerson[0];
 }
 
 // alerts a list of people
@@ -92,7 +93,27 @@ function displayPerson(person){
   // TODO: finish getting the rest of the information to display -COMPLETE
   alert(personInfo);
 }
+// TODO: Display spouse, both parents, children, and siblings
+function displayFamily(spouse)
+{
+  
+}
 
+function findSpouse(person, people)
+{
+  let spouse = people.filter(function (el)
+  {
+    if (el.id === person.currentSpouse)
+    {
+      return true;
+    }
+    else
+    {
+      return false;
+    }
+  })
+  return el[0];
+}
 
 // function that prompts and validates user input
 function promptFor(question, valid){
