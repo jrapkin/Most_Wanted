@@ -12,26 +12,21 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      // TODO: search by traits
+      promptForSearchByTraits(people)      
       break;
-      // use "alert and pass in string"
       default:
     app(people); // restart app
       break;
   }
   
-  // Call the mainMenu function ONLY after you find the SINGLE person you are looking for
   mainMenu(searchResults, people);
 }
 
-// Menu function to call once you find who you are looking for
 function mainMenu(person, people){
-
-  /* Here we pass in the entire person object that we found in our search, as well as the entire original dataset of people. We need people in order to find descendants and other information that the user may want. */
 
   if(!person){
     alert("Could not find that individual.");
-    return app(people); // restart
+    return app(people);
   }
 
   let displayOption = prompt("Found " + person.firstName + " " + person.lastName + " . Do you want to know their 'info', 'family', or 'descendants'? Type the option you want or 'restart' or 'quit'");
@@ -41,22 +36,20 @@ function mainMenu(person, people){
     displayPerson(person)
     break;
     case "family":
-      
     displayFamily(findSpouse(person, people), findParents(person,people), findChildren(person, people));
     break;
     case "descendants":
-    // TODO: get person's descendants
+    displayDescendants(findDescendants(person, people));
     break;
     case "restart":
-    app(people); // restart
+    app(people);
     break;
     case "quit":
-    return; // stop execution
+    return; 
     default:
-    return mainMenu(person, people); // ask again
+    return mainMenu(person, people); 
   }
 }
-
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", chars);
   let lastName = promptFor("What is the person's last name?", chars);
@@ -65,25 +58,21 @@ function searchByName(people){
     if(person.firstName === firstName && person.lastName === lastName){
       return true;
     }
+    if(person.firstName.toLowerCase() === firstName && person.lastName.toLowerCase() === lastName){
+      return true;
+    }
     else{
       return false;
     }
   })
- 
-  // TODO: find the person using the name they entered--COMPLETE
-  return foundPerson[0];
+   return foundPerson[0];
 }
-
-// alerts a list of people
 function displayPeople(people){
   alert(people.map(function(person){
     return person.firstName + " " + person.lastName;
   }).join("\n"));
 }
-
 function displayPerson(person){
-  // print all of the information about a person:
-  // height, weight, age, name, occupation, eye color.
   let personInfo = `First Name: ${person.firstName}\\n`;
   personInfo += `Last Name: ${person.lastName}\n`;
   personInfo += `Gender: ${person.gender}\n`;
@@ -91,7 +80,6 @@ function displayPerson(person){
   personInfo += `Height: ${person.height}\n`;
   personInfo += `Weight: ${person.weight}\n`;
   personInfo += `Eye Color: ${person.eyeColor}\n`;
-  // TODO: finish getting the rest of the information to display -COMPLETE
   alert(personInfo);
 }
 
@@ -118,6 +106,17 @@ function displayFamily(spouse, parents, children)
     })
   }
 alert(familyInfo);
+}
+function displayDescendants(descendants) {
+  let descendantsInfo = "";
+  if(descendants.length > 0) {
+    descendants.forEach( el => {
+      descendantsInfo += `Name: ${el.firstName} ${el.lastName}\n`
+    });
+    alert(descendantsInfo);
+  } else {
+    alert("No descendants found!");
+  }
 }
 
 function findSpouse(person, people)
@@ -155,12 +154,11 @@ function findParents(person, people)
   }
   return parents;
 }
-
 function findChildren(person, people) {
   let children = [];
 
   people.forEach(el => {
-    for(var i=0; i<el.parents.length; i++){
+    for(var i=0; i <el.parents.length; i++){
       if(person.id === el.parents[i]) {
         children.push(el);
       }
@@ -168,21 +166,92 @@ function findChildren(person, people) {
   })
   return(children);
 }
-
-// function that prompts and validates user input
+function findDescendants(person, people)
+{
+  let descendants = [];
+  let children =findChildren(person,people);
+  children.forEach(child => 
+  {
+    descendants = children.concat(findDescendants(child,people))
+  })
+  return descendants;
+}
+function promptForSearchByTraits(people)
+{
+  let searchBy = promptFor("Would you like to search by traits? Enter 'yes' or 'no'", yesNo).toLowerCase();
+  switch (searchBy)
+  {
+    case "yes":
+      searchByTraits(people);
+      break;
+    case "no":
+      //quit
+      return;
+    default:
+      ;
+  }
+}
+//TODO -Review
+function searchByTraits(people, matchingPeople)
+{
+  let selectedTraits = promptFor("Select a trait you would like to use in your search. Choices:\nFirst Name\nLast Name\nGender\nDate of Birth\nHeight\nWeight\nEye Color\nOccupation", chars).toLowerCase().split(' ').join('');
+  selectedTraits = convertedTraitName(selectedTraits);
+  let selectedTraitCritera = promptFor("Please enter the critera for your trait.\nUse an integer for height, and weight, m/dd/yyyy for Date Of Birth.", chars);
+  matchingPeople = people.filter(function(person)
+    {
+      if (person[selectedTraits] == selectedTraitCritera || person[selectedTraits] == selectedTraitCritera)
+        {
+          return person;
+        }
+      else
+        {
+          return false;
+        }
+    });
+    checkForContinuedTraitSearch(matchingPeople)
+  return matchingPeople;
+}
+//TODO Review
+function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
+{
+  let input =promptFor("would you like to continue your serach by traits?",yesNo).toLowerCase()
+  switch(input)
+  {
+    case "yes":
+      return matchingPeople(searchByTraits(matchingPeople));;
+    case "no":
+      return displayPeople(matchingPeople);
+  }
+}
 function promptFor(question, valid){
   do{
     var response = prompt(question).trim();
   } while(!response || !valid(response));
   return response;
 }
-
-// helper function to pass into promptFor to validate yes/no answers
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
-
-// helper function to pass in as default promptFor validation
-function chars(input){
-  return true; // default validation only
+function chars(input)
+{
+  return true;
 }
+
+//TODO Review
+function convertedTraitName(critera)
+{
+  switch (critera)
+  {
+    case "firstname":
+      return critera = "firstName";
+      case "lastname":
+      return critera = "lastName";
+      case "dateofbirth":
+      return critera = "dob";
+      case "eyecolor":
+      return critera = "eyeColor";
+      default:
+        return critera;
+  }
+}
+
