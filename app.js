@@ -115,10 +115,9 @@ alert(familyInfo);
 function displayDescendants(descendants) {
   let descendantsInfo = "";
   if(descendants.length > 0) {
-    descendants.forEach( el => {
-      descendantsInfo += `Name: ${el.firstName} ${el.lastName}\n`
-    });
-    alert(descendantsInfo);
+    alert(descendants.map(function(person) {
+      return person.firstName + " " + person.lastName;
+    }).join("\n"));
   } else {
     alert("No descendants found!");
   }
