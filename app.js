@@ -12,7 +12,7 @@ function app(people){
       searchResults = searchByName(people);
       break;
     case 'no':
-      promptForSearchByTraits(people)      
+      searchResults = promptForSearchByTraits(people);
       break;
       default:
     app(people); // restart app
@@ -182,7 +182,7 @@ function promptForSearchByTraits(people)
   switch (searchBy)
   {
     case "yes":
-      searchByTraits(people);
+      return searchByTraits(people);
       break;
     case "no":
       //quit
@@ -208,21 +208,46 @@ function searchByTraits(people, matchingPeople)
           return false;
         }
     });
-    checkForContinuedTraitSearch(matchingPeople)
-  return matchingPeople;
+    let selectedPerson = checkForContinuedTraitSearch(matchingPeople)
+  return selectedPerson;
 }
 //TODO Review
 function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
 {
-  let input =promptFor("would you like to continue your serach by traits?",yesNo).toLowerCase()
+  let input =promptFor("would you like to continue your search by traits?",yesNo).toLowerCase()
   switch(input)
   {
     case "yes":
       return matchingPeople(searchByTraits(matchingPeople));;
     case "no":
-      return displayPeople(matchingPeople);
+      displayPeople(matchingPeople);
+      //Ask user if they would like to select one
+      let selectedPerson = selectOne(matchingPeople);
+      return selectedPerson;
   }
 }
+
+function selectOne(matchingPeople) {
+  if(matchingPeople.length > 1) {
+    let userInput = promptFor("Would you like to select a match?", yesNo).toLowerCase();
+    switch(userInput) {
+      case "yes":
+        let promptString = "Select a person: \n";
+        for(var i=0; i<matchingPeople.length; i++) {
+          promptString += `${i}. ${matchingPeople[i].firstName} ${matchingPeople[i].lastName}\n`
+        } 
+        let numberInput = promptFor(promptString, numInput);
+        return matchingPeople[numberInput];
+      case "no":
+        return matchingPeople;
+    }
+  } else if (matchingPeople.length == 1) {
+    return matchingPeople[0];
+  } else {
+    return matchingPeople;
+  }
+}
+
 function promptFor(question, valid){
   do{
     var response = prompt(question).trim();
@@ -231,6 +256,9 @@ function promptFor(question, valid){
 }
 function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
+}
+function numInput(input){
+  return true;
 }
 function chars(input)
 {
