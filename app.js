@@ -73,7 +73,7 @@ function displayPeople(people){
   }).join("\n"));
 }
 function displayPerson(person){
-  let personInfo = `First Name: ${person.firstName}\\n`;
+  let personInfo = `First Name: ${person.firstName}\n`;
   personInfo += `Last Name: ${person.lastName}\n`;
   personInfo += `Gender: ${person.gender}\n`;
   personInfo += `Date of Birth: ${person.dob}\n`;
@@ -194,9 +194,9 @@ function promptForSearchByTraits(people)
 //TODO -Review
 function searchByTraits(people, matchingPeople)
 {
-  let selectedTraits = promptFor("Select a trait you would like to use in your search. Choices:\nFirst Name\nLast Name\nGender\nDate of Birth\nHeight\nWeight\nEye Color\nOccupation", chars).toLowerCase().split(' ').join('');
-  selectedTraits = convertedTraitName(selectedTraits);
-  let selectedTraitCritera = promptFor("Please enter the critera for your trait.\nUse an integer for height, and weight, m/dd/yyyy for Date Of Birth.", chars);
+  let selectTraits = promptFor("Select a trait you would like to use in your search. Choices:\nGender\nDate of Birth\nHeight\nWeight\nEye Color\nOccupation", criteria).toLowerCase().split(' ').join('');
+  let selectedTraits = convertedTraitName(selectTraits);
+  let selectedTraitCritera = promptFor(`Please enter the critera for ${selectTraits}.\nUse an integer for height, and weight, m/dd/yyyy for Date Of Birth.`, chars);
   matchingPeople = people.filter(function(person)
     {
       if (person[selectedTraits] == selectedTraitCritera || person[selectedTraits] == selectedTraitCritera)
@@ -208,8 +208,8 @@ function searchByTraits(people, matchingPeople)
           return false;
         }
     });
-    let selectedPerson = checkForContinuedTraitSearch(matchingPeople)
-  return selectedPerson;
+  let result = checkForContinuedTraitSearch(matchingPeople);
+  return result;
 }
 //TODO Review
 function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
@@ -218,7 +218,8 @@ function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
   switch(input)
   {
     case "yes":
-      return matchingPeople(searchByTraits(matchingPeople));;
+      let result = searchByTraits(matchingPeople);
+      return result;
     case "no":
       displayPeople(matchingPeople);
       //Ask user if they would like to select one
@@ -258,11 +259,13 @@ function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
 function numInput(input){
+  return isNaN(input)==false;
+}
+function chars(input){
   return true;
 }
-function chars(input)
-{
-  return true;
+function criteria(input) {
+  return input.toLowerCase() == "gender" || input.toLowerCase().split(" ").join("") == "dateofbirth" || input.toLowerCase() == "height" || input.toLowerCase() == "weight" || input.toLowerCase().split(" ").join("") == "eyecolor" || input.toLowerCase() == "occupation"
 }
 
 //TODO Review
@@ -270,16 +273,12 @@ function convertedTraitName(critera)
 {
   switch (critera)
   {
-    case "firstname":
-      return critera = "firstName";
-      case "lastname":
-      return critera = "lastName";
-      case "dateofbirth":
+    case "dateofbirth":
       return critera = "dob";
-      case "eyecolor":
+    case "eyecolor":
       return critera = "eyeColor";
-      default:
-        return critera;
+    default:
+      return critera;
   }
 }
 
