@@ -239,17 +239,17 @@ function selectOne(matchingPeople) {
       case "yes":
         let promptString = "Select a person: \n";
         for(var i=0; i<matchingPeople.length; i++) {
-          promptString += `${i}. ${matchingPeople[i].firstName} ${matchingPeople[i].lastName}\n`
+          promptString += `${i + 1}. ${matchingPeople[i].firstName} ${matchingPeople[i].lastName}\n`
         } 
         let numberInput = promptFor(promptString, numInput, matchingPeople);
-        return matchingPeople[numberInput];
+        return matchingPeople[numberInput - 1];
       case "no":
-        return matchingPeople;
+        return;
     }
   } else if (matchingPeople.length == 1) {
     return matchingPeople[0];
   } else {
-    return matchingPeople;
+    return matchingPeople[0];
   }
 }
 
@@ -263,7 +263,7 @@ function yesNo(input){
   return input.toLowerCase() == "yes" || input.toLowerCase() == "no";
 }
 function numInput(input, matchingPeople){
-  return isNaN(input)==false && input < matchingPeople.length;
+  return isNaN(input)==false && input <= matchingPeople.length && input > 0;
 }
 function chars(input){
   return true;
