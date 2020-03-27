@@ -49,6 +49,7 @@ function mainMenu(person, people){
     default:
     return mainMenu(person, people); 
   }
+  return mainMenu(person, people);
 }
 function searchByName(people){
   let firstName = promptFor("What is the person's first name?", chars);
@@ -68,9 +69,13 @@ function searchByName(people){
    return foundPerson[0];
 }
 function displayPeople(people){
-  alert(people.map(function(person){
-    return person.firstName + " " + person.lastName;
-  }).join("\n"));
+  if(people.length > 0) {
+    alert(people.map(function(person){
+      return person.firstName + " " + person.lastName;
+    }).join("\n"));
+  } else {
+    alert("No results found!");
+  }
 }
 function displayPerson(person){
   let personInfo = `First Name: ${person.firstName}\n`;
@@ -199,7 +204,7 @@ function searchByTraits(people, matchingPeople)
   let selectedTraitCritera = promptFor(`Please enter the critera for ${selectTraits}.\nUse an integer for height, and weight, m/dd/yyyy for Date Of Birth.`, chars);
   matchingPeople = people.filter(function(person)
     {
-      if (person[selectedTraits] == selectedTraitCritera || person[selectedTraits] == selectedTraitCritera)
+      if (person[selectedTraits] == selectedTraitCritera)
         {
           return person;
         }
@@ -212,7 +217,7 @@ function searchByTraits(people, matchingPeople)
   return result;
 }
 //TODO Review
-function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
+function checkForContinuedTraitSearch(matchingPeople)
 {
   let input =promptFor("would you like to continue your search by traits?",yesNo).toLowerCase()
   switch(input)
@@ -222,7 +227,6 @@ function checkForContinuedTraitSearch(matchingPeople, userIsSearching = true)
       return result;
     case "no":
       displayPeople(matchingPeople);
-      //Ask user if they would like to select one
       let selectedPerson = selectOne(matchingPeople);
       return selectedPerson;
   }
